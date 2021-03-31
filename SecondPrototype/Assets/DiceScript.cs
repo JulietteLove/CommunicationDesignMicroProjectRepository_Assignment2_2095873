@@ -69,6 +69,7 @@ public class DiceScript : MonoBehaviour
         CombatSystem combatSystem = GameObject.FindWithTag("CombatSystem").GetComponent<CombatSystem>();
         combatSystem.state = CombatState.ENEMYTURN;
         combatSystem.EnemyCanRoll = true;
+
         ConsoleText.text = "Enemy Turn";
     }
 

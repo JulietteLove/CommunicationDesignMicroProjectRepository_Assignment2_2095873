@@ -51,6 +51,7 @@ public class CombatSystem : MonoBehaviour
         
         if (state == CombatState.PLAYERCOMBAT)         
         {
+            EnemyCanRoll = false;
             Debug.Log("I am in combat");
             MeleeAttackButton.SetActive(true);
             FireballAttackButton.SetActive(true);

@@ -23,6 +23,7 @@ public class AttackScript : MonoBehaviour
 
     public Text EnemyDamage;
     public Text PlayerDamage;
+    public Text BurnText;
 
     //CODE DEALING WITH PLAYER COMBAT STAGE
 
@@ -44,6 +45,8 @@ public class AttackScript : MonoBehaviour
 
         if (FireballBurn >= 3 && PlayerCanAttack == true)
         {
+            Debug.Log("BURN TEXT HAS RUN");
+
             enemy.currentHealth -= 0.4f;
             enemyHealth.fillAmount = enemy.currentHealth / 1;
 
@@ -52,7 +55,11 @@ public class AttackScript : MonoBehaviour
 
             player.currentHealth -= 0.2f;
             diceScript.playerHealth.fillAmount = player.currentHealth / 1;
+
             //ConsoleText.text = "You were burned";
+            BurnText.text = "You were burned";
+            Invoke("DamageDisappear", 2f);
+
             PlayerDamage.text = "2";
             Invoke("DamageDisappear", 2f);
 
@@ -80,6 +87,8 @@ public class AttackScript : MonoBehaviour
             enemyHealth.fillAmount = enemy.currentHealth / 1;
 
             //ConsoleText.text = "You were not burned";
+
+
 
             if (enemy.currentHealth < 0.1f || enemy.currentHealth > 1f) //Player Wins
             {
@@ -125,7 +134,7 @@ public class AttackScript : MonoBehaviour
 
         CombatSystem combatSystem = GameObject.FindWithTag("CombatSystem").GetComponent<CombatSystem>();
 
-        combatSystem.state = CombatState.ENEMYTURN;
+        Invoke("EnemyTurnChange", 0.5f);
         //ConsoleText.text = "Enemy Turn";
         combatSystem.EnemyCanRoll = true;
     }
@@ -144,5 +153,6 @@ public class AttackScript : MonoBehaviour
     {
         EnemyDamage.text = "";
         PlayerDamage.text = "";
+        BurnText.text = "";
     }
 }
