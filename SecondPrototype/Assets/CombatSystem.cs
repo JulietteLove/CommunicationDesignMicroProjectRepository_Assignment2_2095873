@@ -13,11 +13,18 @@ public class CombatSystem : MonoBehaviour
     public GameObject LoseUI;
     public GameObject WinUI;
 
+    public GameObject RollButton;
+
     public GameObject MeleeAttackButton;
     public GameObject FireballAttackButton;
 
     public GameObject enemyMissExplanation;
     public bool FirstTimeEnemyMiss = true;
+
+    public GameObject PlayerHealthGlow;
+    //public GameObject EnemyMissText;
+    //public GameObject PlayerMissText;
+
     void Start()
     {
         state = CombatState.PLAYERROLL;
@@ -32,7 +39,12 @@ public class CombatSystem : MonoBehaviour
 
         if (state == CombatState.PLAYERROLL)
         {
+            RollButton.SetActive(true);
             PlayerRollDice();
+        }
+        else
+        {
+            RollButton.SetActive(false);
         }
         
         if (state == CombatState.PLAYERCOMBAT)         
@@ -57,6 +69,11 @@ public class CombatSystem : MonoBehaviour
         {
             Application.Quit();
         }
+
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+
+        //}
     }
 
 
@@ -67,13 +84,16 @@ public class CombatSystem : MonoBehaviour
             DiceScript diceScript = GameObject.FindWithTag("Dice").GetComponent<DiceScript>();
 
             diceScript.EnemyNumberRolled = Random.Range(1, 6);
-            diceScript.EnemyDiceText.GetComponent<UnityEngine.UI.Text>().text = diceScript.EnemyNumberRolled.ToString("F0"); 
-
+            diceScript.EnemyDiceText.GetComponent<UnityEngine.UI.Text>().text = diceScript.EnemyNumberRolled.ToString("F0");
+            
+            ScreenshakeController screenShakeController = GameObject.FindWithTag("MainCamera").GetComponent<ScreenshakeController>();
             Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
 
             if (player.defenceNumber >= diceScript.EnemyNumberRolled) //Enemy defends itself.
             {
                 diceScript.ConsoleText.text = "Enemy misses";
+                //EnemyMissText.SetActive(true);
+                Invoke("FeedbackTextDisappear", 2f);
                 Invoke("PlayerTurn", 2f);
                 Debug.Log("Enemy has missed");
 
@@ -91,6 +111,12 @@ public class CombatSystem : MonoBehaviour
                 player.currentHealth -= 0.2f;
                 diceScript.playerHealth.fillAmount = player.currentHealth / 1;
                 Invoke("PlayerTurn", 2f);
+
+                PlayerHealthGlow.SetActive(true);
+                Invoke("GlowDisappear", 0.5f);
+
+                StartCoroutine(screenShakeController.CameraShake(0.1f, 0.05f)); //Screenshake
+
                 Debug.Log("Enemy has hit");
 
                 if (player.currentHealth < 0.1f || player.currentHealth > 1f) //Player Loses
@@ -121,4 +147,15 @@ public class CombatSystem : MonoBehaviour
     {
         enemyMissExplanation.SetActive(false);
     }
+
+    void GlowDisappear()
+    {
+        PlayerHealthGlow.SetActive(false);
+    }
+
+    //void FeedbackTextDisappear()
+    //{
+    //    EnemyMissText.SetActive(false);
+    //    PlayerMissText.SetActive(false);
+    //}
 }

@@ -18,6 +18,9 @@ public class AttackScript : MonoBehaviour
     public GameObject WinUI;
     public GameObject LoseUI;
 
+    public GameObject PlayerHealthGlow;
+    public GameObject EnemyHealthGlow;
+
     //CODE DEALING WITH PLAYER COMBAT STAGE
 
     public void FireballButton()
@@ -26,6 +29,12 @@ public class AttackScript : MonoBehaviour
         CombatSystem combatSystem = GameObject.FindWithTag("CombatSystem").GetComponent<CombatSystem>();
 
         FireballBurn = Random.Range(1, 6);
+
+        EnemyHealthGlow.SetActive(true);
+        Invoke("EnemyGlowDisappear", 0.5f);
+
+        ScreenshakeController screenShakeController = GameObject.FindWithTag("MainCamera").GetComponent<ScreenshakeController>();
+        StartCoroutine(screenShakeController.CameraShake(0.15f, 0.1f));
 
         if (FireballBurn >= 3 && PlayerCanAttack == true)
         {
@@ -38,6 +47,9 @@ public class AttackScript : MonoBehaviour
             player.currentHealth -= 0.2f;
             diceScript.playerHealth.fillAmount = player.currentHealth / 1;
             ConsoleText.text = "You were burned";
+
+            PlayerHealthGlow.SetActive(true);
+            Invoke("PlayerGlowDisappear", 0.5f);
 
             if (enemy.currentHealth < 0.1f || enemy.currentHealth > 1f) //Player Wins
             {
@@ -88,6 +100,12 @@ public class AttackScript : MonoBehaviour
         enemy.currentHealth -= 0.2f;
         enemyHealth.fillAmount = enemy.currentHealth/1;
 
+        EnemyHealthGlow.SetActive(true);
+        Invoke("EnemyGlowDisappear", 0.5f);
+
+        ScreenshakeController screenShakeController = GameObject.FindWithTag("MainCamera").GetComponent<ScreenshakeController>();
+        StartCoroutine(screenShakeController.CameraShake(0.1f, 0.05f));
+
         if (enemy.currentHealth < 0.1f || enemy.currentHealth > 1f) //Player Wins
         {
             Debug.Log("Has Won");
@@ -99,5 +117,15 @@ public class AttackScript : MonoBehaviour
         combatSystem.state = CombatState.ENEMYTURN;
         ConsoleText.text = "Enemy Turn";
         combatSystem.EnemyCanRoll = true;
+    }
+
+    public void PlayerGlowDisappear()
+    {
+        PlayerHealthGlow.SetActive(false);
+    }
+
+    public void EnemyGlowDisappear()
+    {
+        EnemyHealthGlow.SetActive(false);
     }
 }
