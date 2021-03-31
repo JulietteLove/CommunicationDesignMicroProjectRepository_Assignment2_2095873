@@ -22,8 +22,10 @@ public class CombatSystem : MonoBehaviour
     public bool FirstTimeEnemyMiss = true;
 
     public GameObject PlayerHealthGlow;
-    //public GameObject EnemyMissText;
-    //public GameObject PlayerMissText;
+    public GameObject EnemyMissText;
+    public GameObject PlayerMissText;
+
+    public Text PlayerDamage;
 
     void Start()
     {
@@ -69,11 +71,6 @@ public class CombatSystem : MonoBehaviour
         {
             Application.Quit();
         }
-
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-
-        //}
     }
 
 
@@ -91,8 +88,8 @@ public class CombatSystem : MonoBehaviour
 
             if (player.defenceNumber >= diceScript.EnemyNumberRolled) //Enemy defends itself.
             {
-                diceScript.ConsoleText.text = "Enemy misses";
-                //EnemyMissText.SetActive(true);
+                //diceScript.ConsoleText.text = "Enemy misses";
+                EnemyMissText.SetActive(true);
                 Invoke("FeedbackTextDisappear", 2f);
                 Invoke("PlayerTurn", 2f);
                 Debug.Log("Enemy has missed");
@@ -114,6 +111,9 @@ public class CombatSystem : MonoBehaviour
 
                 PlayerHealthGlow.SetActive(true);
                 Invoke("GlowDisappear", 0.5f);
+
+                PlayerDamage.text = "2";
+                Invoke("DamageDisappear", 2f);
 
                 StartCoroutine(screenShakeController.CameraShake(0.1f, 0.05f)); //Screenshake
 
@@ -153,9 +153,14 @@ public class CombatSystem : MonoBehaviour
         PlayerHealthGlow.SetActive(false);
     }
 
-    //void FeedbackTextDisappear()
-    //{
-    //    EnemyMissText.SetActive(false);
-    //    PlayerMissText.SetActive(false);
-    //}
+    void FeedbackTextDisappear()
+    {
+        EnemyMissText.SetActive(false);
+        PlayerMissText.SetActive(false);
+    }
+
+    void DamageDisappear()
+    {
+        PlayerDamage.text = "";
+    }
 }

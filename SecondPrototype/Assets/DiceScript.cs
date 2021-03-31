@@ -34,8 +34,10 @@ public class DiceScript : MonoBehaviour
 
             if (enemy.defenceNumber >= NumberRolled) //Enemy defends itself.
             {
-                ConsoleText.text = "Miss";
+                //ConsoleText.text = "Miss";
                 Invoke("EnemyTurn", 2f);
+                combatSystem.PlayerMissText.SetActive(true);
+                Invoke("FeedbackTextDisappear", 2f);
 
                 if (FirstTimePlayerMiss == true)
                 {
@@ -78,5 +80,11 @@ public class DiceScript : MonoBehaviour
     void MissTextDisappear()
     {
         playerMissExplanation.SetActive(false);
+    }
+
+    void FeedbackTextDisappear()
+    {
+        CombatSystem combatSystem = GameObject.FindWithTag("CombatSystem").GetComponent<CombatSystem>();
+        combatSystem.PlayerMissText.SetActive(false);
     }
 }
