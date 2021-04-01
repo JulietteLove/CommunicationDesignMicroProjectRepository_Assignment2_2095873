@@ -75,7 +75,7 @@ public class DiceScript : MonoBehaviour
 
     public void Replay() //Replay scene button
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Game");
     }
 
     void MissTextDisappear()
